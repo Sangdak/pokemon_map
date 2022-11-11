@@ -2,11 +2,28 @@ from django.db import models  # noqa F401
 
 
 class Pokemon(models.Model):
-    title = models.CharField(max_length=200)
+    title_ru = models.CharField(max_length=200, null=True)
+    title_en = models.CharField(max_length=200, null=True)
+    title_jp = models.CharField(max_length=200, null=True)
+    description = models.TextField(null=True)
+    previous_evolution = models.ForeignKey(
+        'pokemon_entities.pokemon',
+        related_name='prev_evo',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    next_evolution = models.ForeignKey(
+        'pokemon_entities.pokemon',
+        related_name='next_evo',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     img_url = models.ImageField(null=True)
 
     def __str__(self):
-        return self.title
+        return self.title_ru
 
 
 class PokemonEntity(models.Model):
@@ -22,4 +39,4 @@ class PokemonEntity(models.Model):
     stamina = models.IntegerField(verbose_name='Выносливость', default=0, blank=True)
 
     def __str__(self):
-        return f'{self.id} - {self.pokemon.title}'
+        return f'{self.id} - {self.pokemon.title_ru}'

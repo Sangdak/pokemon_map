@@ -45,7 +45,7 @@ def show_all_pokemons(request):
         pokemons_on_page.append(
             {'pokemon_id': pokemon.id,
              'img_url': request.build_absolute_uri(f'/media/{pokemon.img_url}'),
-             'title_ru': pokemon.title,
+             'title_ru': pokemon.title_ru,
              }
         )
 
@@ -65,7 +65,10 @@ def show_pokemon(request, pokemon_id):
         pokemon = {
             'pokemon_id': chosen_pokemon.id,
             'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.img_url}'),
-            'title_ru': chosen_pokemon.title,
+            'title_ru': chosen_pokemon.title_ru,
+            'title_en': chosen_pokemon.title_en,
+            'title_jp': chosen_pokemon.title_jp,
+            'description': chosen_pokemon.description,
         }
     except Pokemon.DoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
