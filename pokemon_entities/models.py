@@ -20,3 +20,6 @@ class PokemonEntity(models.Model):
     attack = models.IntegerField(verbose_name='Атака', default=0, blank=True)
     defence = models.IntegerField(verbose_name='Защита', default=0, blank=True)
     stamina = models.IntegerField(verbose_name='Выносливость', default=0, blank=True)
+
+    def __str__(self):
+        return f'{self.id} - {self.pokemon.title}'
