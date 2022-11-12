@@ -5,6 +5,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.utils.timezone import localtime
 from .models import Pokemon, PokemonEntity
+from django.core.exceptions import ObjectDoesNotExist
 
 
 MOSCOW_CENTER = [55.751244, 37.618423]
@@ -62,6 +63,23 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
     try:
         chosen_pokemon = Pokemon.objects.get(id=pokemon_id)
+
+        if chosen_pokemon.previous_evolution:
+            prev_evo = {'pokemon_id': chosen_pokemon.previous_evolution.id,
+                        'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.previous_evolution.img_url}'),
+                        'title_ru': chosen_pokemon.previous_evolution.title_ru,
+                        }
+        else:
+            prev_evo = None
+
+        if chosen_pokemon.next_evolution.first():
+            next_evo = {'pokemon_id': chosen_pokemon.next_evolution.first().id,
+                        'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.next_evolution.first().img_url}'),
+                        'title_ru': chosen_pokemon.next_evolution.first().title_ru,
+                        }
+        else:
+            next_evo = None
+
         pokemon = {
             'pokemon_id': chosen_pokemon.id,
             'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.img_url}'),
@@ -69,6 +87,8 @@ def show_pokemon(request, pokemon_id):
             'title_en': chosen_pokemon.title_en,
             'title_jp': chosen_pokemon.title_jp,
             'description': chosen_pokemon.description,
+            'previous_evolution': prev_evo,
+            'next_evolution': next_evo,
         }
     except Pokemon.DoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
