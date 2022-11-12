@@ -22,15 +22,15 @@ class Pokemon(models.Model):
 
 class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
-    lat = models.FloatField('Координаты, шир.', blank=True)
-    lon = models.FloatField('Координаты, долг.', blank=True)
+    lat = models.FloatField('Координаты, шир.')
+    lon = models.FloatField('Координаты, долг.')
     appeared_at = models.DateTimeField('Время появления', blank=True)
     disappeared_at = models.DateTimeField('Время исчезновения', blank=True)
-    level = models.IntegerField(verbose_name='Уровень', default=0, blank=True)
-    health = models.IntegerField(verbose_name='Здоровье', default=0, blank=True)
-    attack = models.IntegerField(verbose_name='Атака', default=0, blank=True)
-    defence = models.IntegerField(verbose_name='Защита', default=0, blank=True)
-    stamina = models.IntegerField(verbose_name='Выносливость', default=0, blank=True)
+    level = models.IntegerField(verbose_name='Уровень', default=1, blank=True)
+    health = models.IntegerField(verbose_name='Здоровье', default=1, blank=True)
+    attack = models.IntegerField(verbose_name='Атака', default=11, blank=True)
+    defence = models.IntegerField(verbose_name='Защита', default=1, blank=True)
+    stamina = models.IntegerField(verbose_name='Выносливость', default=1, blank=True)
 
     def __str__(self):
         return f'{self.id} - {self.pokemon.title_ru}'
