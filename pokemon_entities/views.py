@@ -1,12 +1,8 @@
 import folium
-import json
 
-from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.utils.timezone import localtime
 from .models import Pokemon, PokemonEntity
-from django.core.exceptions import ObjectDoesNotExist
-
 
 MOSCOW_CENTER = [55.751244, 37.618423]
 DEFAULT_IMAGE_URL = (
@@ -62,7 +58,8 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     chosen_pokemon = get_object_or_404(Pokemon, id=pokemon_id)
-
+    next_evolution = chosen_pokemon.next_evolutions.first()
+    previous_evolution = chosen_pokemon.previous_evolution
     if chosen_pokemon.previous_evolution:
         prev_evo = {'pokemon_id': chosen_pokemon.previous_evolution.id,
                     'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.previous_evolution.img_url}'),
@@ -79,7 +76,7 @@ def show_pokemon(request, pokemon_id):
     else:
         next_evo = None
 
-    pokemon = {
+    pokemon_item = {
         'pokemon_id': chosen_pokemon.id,
         'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.img_url}'),
         'title_ru': chosen_pokemon.title_ru,
@@ -92,7 +89,8 @@ def show_pokemon(request, pokemon_id):
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     now_time = localtime()
-    for pokemon_entity in PokemonEntity.objects.filter(appeared_at__lte=now_time, disappeared_at__gte=now_time):
+    pokemon_entities = chosen_pokemon.entities.filter(appeared_at__lte=now_time, disappeared_at__gte=now_time)
+    for pokemon_entity in pokemon_entities:
         add_pokemon(
             folium_map,
             pokemon_entity.lat,
@@ -105,6 +103,6 @@ def show_pokemon(request, pokemon_id):
         'pokemon.html',
         context={
             'map': folium_map._repr_html_(),
-            'pokemon': pokemon,
+            'pokemon': pokemon_item,
             }
         )
