@@ -72,10 +72,10 @@ def show_pokemon(request, pokemon_id):
         else:
             prev_evo = None
 
-        if chosen_pokemon.next_evolution.first():
-            next_evo = {'pokemon_id': chosen_pokemon.next_evolution.first().id,
-                        'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.next_evolution.first().img_url}'),
-                        'title_ru': chosen_pokemon.next_evolution.first().title_ru,
+        if chosen_pokemon.next_evolutions.first():
+            next_evo = {'pokemon_id': chosen_pokemon.next_evolutions.first().id,
+                        'img_url': request.build_absolute_uri(f'/media/{chosen_pokemon.next_evolutions.first().img_url}'),
+                        'title_ru': chosen_pokemon.next_evolutions.first().title_ru,
                         }
         else:
             next_evo = None

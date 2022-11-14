@@ -9,7 +9,7 @@ class Pokemon(models.Model):
     previous_evolution = models.ForeignKey(
         'pokemon_entities.pokemon',
         verbose_name='Из кого эволюционирует',
-        related_name='next_evolution',
+        related_name='next_evolutions',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
